@@ -3,6 +3,7 @@ package com.example.taskmanagerapi.Service;
 import com.example.taskmanagerapi.Models.Exceptions.InvalidTaskIdException;
 import com.example.taskmanagerapi.Models.Task;
 import com.example.taskmanagerapi.Repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +13,15 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
+    @Autowired
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+        System.out.println("Tasks in DB: " + tasks);
+        return tasks;
     }
 
     public Task getTaskById(Long id) {
@@ -25,7 +29,17 @@ public class TaskService {
     }
 
     public Task createTask(Task task) {
-        return this.taskRepository.save(task);
+        Task newTask = new Task();
+        newTask.setTitle(task.getTitle());
+        newTask.setDescription(task.getDescription());
+        newTask.setStatus(task.getStatus());
+        newTask.setPriority(task.getPriority());
+        newTask.setAssignee(task.getAssignee());
+        newTask.setDueDate(task.getDueDate());
+        newTask.setCreatedAt(task.getCreatedAt());
+        newTask.setUpdatedAt(task.getUpdatedAt());
+        this.taskRepository.save(newTask);
+        return task;
     }
 
     public Task updateTask(Task task, Long id) {
@@ -39,6 +53,7 @@ public class TaskService {
                     existingTask.setDueDate(task.getDueDate());
                     existingTask.setCreatedAt(task.getCreatedAt());
                     existingTask.setUpdatedAt(task.getUpdatedAt());
+                    this.taskRepository.save(existingTask);
                     return existingTask;
                 }).orElseThrow(InvalidTaskIdException::new);
     }
