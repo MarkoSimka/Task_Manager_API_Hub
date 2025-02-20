@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    public Role findByName(String name);
+
+    @Query("SELECT role FROM Role role WHERE role.name LIKE CONCAT(:name, '%')")
+    Role findByName(String name);
 }

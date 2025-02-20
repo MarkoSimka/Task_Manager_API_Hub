@@ -6,10 +6,16 @@ import com.example.taskmanagerapi.Repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
+
+    public List<Role> listAllRoles() {
+        return roleRepository.findAll();
+    }
 
     public Role findRoleByName(String name) {
         return roleRepository.findByName(name);

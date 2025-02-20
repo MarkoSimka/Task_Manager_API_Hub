@@ -6,14 +6,22 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/api/v1/roles")
+import java.util.List;
+
+@RestController
 @AllArgsConstructor
+@RequestMapping("/api/v1/roles")
 public class RoleController {
 
     private final RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<Role> getRoleByName(String name) {
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return ResponseEntity.ok(roleService.listAllRoles());
+    }
+
+    @GetMapping("/names/{name}")
+    public ResponseEntity<Role> findRoleByName(@PathVariable String name) {
         return ResponseEntity.ok(roleService.findRoleByName(name));
     }
 
@@ -32,7 +40,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.updateRole(role, id));
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Role> deleteRole(@PathVariable Long id) {
         roleService.deleteRoleById(id);
         return ResponseEntity.noContent().build();
